@@ -24,16 +24,22 @@ function DonorMap() {
   };
 
   const getUserLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          });
-        },
-        (err) => console.log("Geolocation error:", err)
-      );
+    try {
+      if (typeof navigator !== "undefined" && navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            if (position && position.coords) {
+              setUserLocation({
+                lat: parseFloat(position.coords.latitude) || 0,
+                lng: parseFloat(position.coords.longitude) || 0
+              });
+            }
+          },
+          (err) => console.log("Geolocation error:", err)
+        );
+      }
+    } catch (error) {
+      console.log("Geolocation exception:", error);
     }
   };
 
@@ -109,14 +115,20 @@ function DonorMap() {
         )}
 
         {donors.map((donor, idx) => {
-          const distance = userLocation 
-            ? getDistance(userLocation.lat, userLocation.lng, donor.latitude, donor.longitude) 
+          const parsedLat = parseFloat(donor.latitude);
+          const parsedLng = parseFloat(donor.longitude);
+          
+          const validLat = !isNaN(parsedLat) ? parsedLat : 17.385044;
+          const validLng = !isNaN(parsedLng) ? parsedLng : 78.486671;
+
+          const distance = userLocation && !isNaN(parsedLat) && !isNaN(parsedLng)
+            ? getDistance(userLocation.lat, userLocation.lng, parsedLat, parsedLng) 
             : 999;
-          const isNearby = distance < 50;
+          const isNearby = !isNaN(distance) && distance < 50;
 
           // Add a small jitter so overlapping donors can still be clicked
-          const lat = (donor.latitude || 17.385044) + (donor.latitude ? 0 : (Math.random() - 0.5) * 0.1);
-          const lng = (donor.longitude || 78.486671) + (donor.longitude ? 0 : (Math.random() - 0.5) * 0.1);
+          const lat = validLat + (!isNaN(parsedLat) ? 0 : (Math.random() - 0.5) * 0.1);
+          const lng = validLng + (!isNaN(parsedLng) ? 0 : (Math.random() - 0.5) * 0.1);
 
           return (
             <Marker
@@ -129,7 +141,7 @@ function DonorMap() {
                 <h3>{donor.name}</h3>
                 <p>🩸 Blood Group: {donor.bloodGroup}</p>
                 <p>📍 Location: {donor.city || donor.address || "Unknown"}</p>
-                {userLocation && (
+                {userLocation && !isNaN(distance) && distance !== 999 && (
                   <p style={{ color: isNearby ? "#b30000" : "#666", fontWeight: "bold" }}>
                     📏 Distance: {distance.toFixed(1)} km {isNearby ? "(Nearby! 🚀)" : ""}
                   </p>
