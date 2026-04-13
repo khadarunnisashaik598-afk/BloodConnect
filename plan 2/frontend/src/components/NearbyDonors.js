@@ -28,7 +28,7 @@ function NearbyDonors() {
 
   const fetchDonors = async (lat, lon) => {
     try {
-      const res = await axios.get("http://localhost:5000/api/donors");
+      const res = await axios.get("/api/donors");
       const nearby = res.data.filter((donor) => {
         if (!donor.latitude || !donor.longitude || !donor.available) return false;
         const distance = getDistance(lat, lon, donor.latitude, donor.longitude);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const BASE = "http://localhost:5000/api/stats";
+const BASE = "/api/stats";
 
 // Blood group badge colors
 const BG_COLORS = {

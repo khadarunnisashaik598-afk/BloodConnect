@@ -11,7 +11,7 @@ function DonorAuth() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = isLogin ? "http://localhost:5000/api/auth/login" : "http://localhost:5000/api/auth/register";
+    const url = isLogin ? "/api/auth/login" : "/api/auth/register";
     const payload = isLogin ? { username, password } : { username, email, password, role: "user" };
 
     try {

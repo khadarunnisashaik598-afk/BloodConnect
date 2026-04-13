@@ -12,7 +12,7 @@ function Search() {
   const searchDonors = async () => {
     setSearching(true);
     try {
-      const res = await axios.get("http://localhost:5000/api/donors/search", {
+      const res = await axios.get("/api/donors/search", {
         params: { bloodGroup, city }
       });
       setDonors(res.data);
@@ -30,7 +30,7 @@ function Search() {
       return;
     }
     try {
-      await axios.post("http://localhost:5000/api/stats/request", {
+      await axios.post("/api/stats/request", {
         requesterName: user.username,
         bloodGroup: donor.bloodGroup,
         phone: user.phone || "—",

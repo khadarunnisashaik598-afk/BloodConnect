@@ -11,7 +11,7 @@ function DonorList() {
 
   const fetchDonors = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/donors");
+      const res = await axios.get("/api/donors");
       setDonors(res.data);
     } catch (error) {
       console.log(error);
@@ -25,7 +25,7 @@ function DonorList() {
       return;
     }
     try {
-      await axios.post("http://localhost:5000/api/stats/request", {
+      await axios.post("/api/stats/request", {
         requesterName: user.username,
         bloodGroup: donor.bloodGroup
       });

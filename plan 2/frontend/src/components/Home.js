@@ -25,7 +25,7 @@ el.classList.add("show");
 
   const fetchStats = async () => {
     try {
-      const res = await (await fetch("http://localhost:5000/api/stats/admin-stats")).json();
+      const res = await (await fetch("/api/stats/admin-stats")).json();
       setAvailablePackets(res.availablePackets);
     } catch (err) {
       console.error("Error fetching stats");

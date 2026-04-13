@@ -12,7 +12,7 @@ function Dashboard() {
   const fetchDonors = async () => {
     try {
 
-      const res = await axios.get("http://localhost:5000/api/donors");
+      const res = await axios.get("/api/stats/summary");
 
       const donors = res.data;
 

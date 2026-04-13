@@ -16,7 +16,7 @@ function DonorMap() {
 
   const fetchDonors = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/donors");
+      const res = await axios.get("/api/donors/locations");
       setDonors(res.data);
     } catch (err) {
       console.log(err);

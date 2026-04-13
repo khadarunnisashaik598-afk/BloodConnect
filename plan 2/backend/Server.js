@@ -7,6 +7,8 @@ const donorRoutes = require("./routes/donorRoutes");
 const authRoutes = require("./routes/authRoutes");
 const statsRoutes = require("./routes/statsRoutes");
 
+const path = require("path");
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -20,6 +22,13 @@ app.use("/api/donors", donorRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/stats", statsRoutes);
 
+// Serve Static Files (Production)
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+
+// Catch-all to serve index.html for React Router
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
+});
 
 // Start server
 const PORT = process.env.PORT || 5000;

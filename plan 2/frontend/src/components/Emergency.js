@@ -17,7 +17,7 @@ function Emergency(){
 
   const fetchStats = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/stats/admin-stats");
+      const res = await axios.get("/api/stats/admin-stats");
       setAvailablePackets(res.data.availablePackets);
     } catch (err) {
       console.error("Error fetching stats");
@@ -36,7 +36,7 @@ function Emergency(){
     }
     setLoading(true);
     try {
-      await axios.post("http://localhost:5000/api/stats/request", {
+      await axios.post("/api/stats/request", {
         requesterName: formData.name,
         bloodGroup: blood,
         phone: formData.phone,
@@ -57,7 +57,7 @@ function Emergency(){
   const searchEmergency = async () => {
     if (!blood) { alert("Select blood group first"); return; }
     try {
-      const res = await axios.get(`http://localhost:5000/api/donors/emergency/${encodeURIComponent(blood)}`);
+      const res = await axios.get(`/api/donors/emergency/${encodeURIComponent(blood)}`);
       setDonors(res.data);
     } catch (err) {
       console.log(err);

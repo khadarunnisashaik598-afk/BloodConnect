@@ -27,7 +27,7 @@ function Register() {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/donors", form);
+      await axios.post("/api/donors", form);
 
       alert("✅ Donor Registered Successfully");
 

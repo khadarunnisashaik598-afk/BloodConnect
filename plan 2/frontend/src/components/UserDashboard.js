@@ -20,7 +20,7 @@ function UserDashboard() {
     const fetchProfile = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/donors/my-profile/${user._id || user.email || user.username}`
+          `/api/donors/my-profile/${user._id || user.email || user.username}`
         );
 
         if (res.data) {
@@ -69,7 +69,7 @@ function UserDashboard() {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/donors/upsert", {
+      await axios.post("/api/donors/upsert", {
         ...formData,
         userId: user._id || user.email || user.username,
         latitude: coords.lat,
