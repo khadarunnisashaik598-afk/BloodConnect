@@ -16,7 +16,7 @@ function DonorMap() {
 
   const fetchDonors = async () => {
     try {
-      const res = await axios.get("/api/donors/locations");
+      const res = await axios.get("/api/donors");
       setDonors(res.data);
     } catch (err) {
       console.log(err);
@@ -75,7 +75,7 @@ function DonorMap() {
   });
 
   return (
-    <div style={{ height: "650px", width: "100%", padding: "20px" }}>
+    <div style={{ height: "calc(100vh - 80px)", width: "100%", padding: "10px", position: "relative", zIndex: 1 }}>
       <style>{`
         .glow-marker-premium {
           filter: drop-shadow(0 0 10px #ff0000) drop-shadow(0 0 20px #ff4d4d);
