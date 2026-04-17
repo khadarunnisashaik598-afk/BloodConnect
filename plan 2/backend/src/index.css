@@ -393,38 +393,6 @@ transition:all 0.8s ease-out;
 }
 
 .fade-on-scroll.show{
-  opacity:1;
-  transform:translateY(0);
+opacity:1;
+transform:translateY(0);
 }
-
-/* ===== LEAFLET FIXES ===== */
-.leaflet-container {
-  height: 100% !important;
-  width: 100% !important;
-  z-index: 1;
-  background-color: #222 !important;
-}
-
-.leaflet-control-container .leaflet-control {
-  z-index: 1000 !important;
-}
-
-.marker-standard {
-  filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
-  transition: transform 0.2s;
-}
-
-.marker-standard:hover {
-  transform: scale(1.2);
-}
-
-.glow-marker-premium {
-  filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.8));
-  animation: markerPulse 1.5s infinite alternate;
-}
-
-@keyframes markerPulse {
-  from { transform: scale(1); filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.6)); }
-  to { transform: scale(1.1); filter: drop-shadow(0 0 15px rgba(255, 0, 0, 1)); }
-}
-

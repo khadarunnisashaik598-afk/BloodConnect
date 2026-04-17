@@ -13,19 +13,16 @@ function Dashboard() {
     try {
 
       const res = await axios.get("/api/stats/summary");
-      if (Array.isArray(res.data)) {
-        const donors = res.data;
-        const count = {};
-        donors.forEach((donor) => {
-          if (donor && donor.bloodGroup) {
-            count[donor.bloodGroup] = (count[donor.bloodGroup] || 0) + 1;
-          }
-        });
-        setStats(count);
-      } else {
-        console.error("Expected array from summary but got:", res.data);
-        setStats({});
-      }
+
+      const donors = res.data;
+
+      const count = {};
+
+      donors.forEach((donor) => {
+        count[donor.bloodGroup] = (count[donor.bloodGroup] || 0) + 1;
+      });
+
+      setStats(count);
 
     } catch (error) {
       console.log(error);

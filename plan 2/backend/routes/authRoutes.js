@@ -6,10 +6,18 @@ const User = require("../models/User");
 router.post("/register", async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
-    const user = new User({ username, email, password, role });
+    const user = new User({ username, email, password, role: role || "user" });
     await user.save();
     res.status(201).json({ message: "User registered" });
   } catch (err) {
+    console.error("[Register Error]", err);
+    // Handle MongoDB Duplicate Key Error (Username or Email already exists)
+    if (err.code === 11000) {
+      const field = Object.keys(err.keyPattern)[0];
+      return res.status(400).json({ 
+        error: `${field.charAt(0).toUpperCase() + field.slice(1)} already exists. Try Logging In.` 
+      });
+    }
     res.status(400).json({ error: err.message });
   }
 });

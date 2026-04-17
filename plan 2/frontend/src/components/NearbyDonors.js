@@ -5,36 +5,74 @@ function NearbyDonors() {
   const [donors, setDonors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
+  const [locationType, setLocationType] = useState("browser"); // browser or ip
 
   useEffect(() => {
+    getLocation();
+  }, []);
+
+  const getLocation = () => {
+    setLoading(true);
+    setErrorMsg("");
+
+    // Check for insecure origin and if not localhost
+    const isInsecure = window.location.protocol === "http:" && 
+                     window.location.hostname !== "localhost" && 
+                     window.location.hostname !== "127.0.0.1";
+
+    if (isInsecure) {
+      console.warn("Insecure origin detected. Falling back to IP-based location.");
+      getIPLocation();
+      return;
+    }
+
     if (!navigator.geolocation) {
-      setErrorMsg("Geolocation is not supported by your browser.");
-      setLoading(false);
+      getIPLocation("Geolocation not supported. Using approximate location.");
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-        fetchDonors(lat, lon);
+        setLocationType("browser");
+        fetchDonors(position.coords.latitude, position.coords.longitude);
       },
       (error) => {
-        setErrorMsg("Please enable location access to find nearby donors.");
-        setLoading(false);
-      }
+        console.warn("Browser geolocation failed:", error.message);
+        getIPLocation();
+      },
+      { timeout: 5000 }
     );
-  }, []);
+  };
+
+  const getIPLocation = async (customMsg = "") => {
+    try {
+      const res = await axios.get("https://ipapi.co/json/");
+      if (res.data && res.data.latitude && res.data.longitude) {
+        setLocationType("ip");
+        fetchDonors(res.data.latitude, res.data.longitude);
+      } else {
+        throw new Error("Invalid response from IP API");
+      }
+    } catch (err) {
+      console.error("IP Location error:", err);
+      setErrorMsg(customMsg || "Could not detect location. Please enable GPS or move to a secure site (HTTPS).");
+      setLoading(false);
+    }
+  };
 
   const fetchDonors = async (lat, lon) => {
     try {
       const res = await axios.get("/api/donors");
-      const nearby = res.data.filter((donor) => {
-        if (!donor.latitude || !donor.longitude || !donor.available) return false;
-        const distance = getDistance(lat, lon, donor.latitude, donor.longitude);
-        return distance < 50; // 50km radius
-      });
-      setDonors(nearby);
+      if (Array.isArray(res.data)) {
+        const nearby = res.data.filter((donor) => {
+          if (!donor.latitude || !donor.longitude || !donor.available) return false;
+          const distance = getDistance(lat, lon, donor.latitude, donor.longitude);
+          return distance < 50; // 50km radius
+        });
+        setDonors(nearby);
+      } else {
+        setErrorMsg("Unexpected data format from server.");
+      }
     } catch (error) {
       setErrorMsg("Failed to fetch donor data.");
     } finally {
@@ -60,6 +98,12 @@ function NearbyDonors() {
     <div style={{ padding: "40px", maxWidth: "1200px", margin: "0 auto" }}>
       <h2 className="page-title">📍 Donors Near You</h2>
 
+      {locationType === "ip" && !errorMsg && !loading && (
+        <div style={{ textAlign: "center", marginBottom: "20px", color: "#888", fontSize: "0.85rem", background: "rgba(0,0,0,0.05)", padding: "5px", borderRadius: "8px" }}>
+          ⚠️ Using approximate location (IP-based). For better accuracy, use a secure connection (HTTPS).
+        </div>
+      )}
+
       {loading ? (
         <div style={{ textAlign: "center", padding: "50px" }}>
           <div className="pulse-btn" style={{ display: "inline-block", background: "white", borderRadius: "50%", padding: "20px" }}>📍</div>
@@ -67,24 +111,26 @@ function NearbyDonors() {
         </div>
       ) : errorMsg ? (
         <div className="glass-container" style={{ textAlign: "center", color: "#ff4d4d", padding: "40px" }}>
-          <h3>⚠️ Access Needed</h3>
+          <h3>⚠️ Location Access Issue</h3>
           <p>{errorMsg}</p>
+          <button onClick={getLocation} className="glass-btn" style={{ marginTop: "20px" }}>🔄 Retry Detection</button>
         </div>
       ) : (
         <div className="donor-grid">
-          {donors.length === 0 ? (
+          {!Array.isArray(donors) || donors.length === 0 ? (
             <div style={{ gridColumn: "1/-1", textAlign: "center", padding: "50px" }} className="glass-container">
               <p>No available donors found within 50km of your location.</p>
+              <button onClick={getLocation} className="glass-btn" style={{ marginTop: "20px" }}>🔄 Refresh Location</button>
             </div>
           ) : (
-            donors.map((donor) => (
-              <div key={donor._id} className="glass-card animate-card">
+            donors.map((donor, idx) => (
+              <div key={donor._id || idx} className="glass-card animate-card">
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "15px" }}>
-                  <h3 style={{ margin: 0 }}>{donor.name}</h3>
+                  <h3 style={{ margin: 0 }}>{donor.name || "Unknown Donor"}</h3>
                   <span className="blood-chip active" style={{ fontSize: "0.8rem", padding: "4px 10px" }}>{donor.bloodGroup}</span>
                 </div>
                 <p style={{ marginBottom: "8px" }}><b>City:</b> {donor.city}</p>
-                <p style={{ marginBottom: "20px" }}><b>Distance:</b> Very Close</p>
+                <p style={{ marginBottom: "20px" }}><b>Status:</b> <span style={{ color: "#28a745" }}>Nearby</span></p>
                 <a href={`tel:${donor.phone}`} style={{ textDecoration: "none" }}>
                   <button className="glass-btn pulse-btn" style={{ width: "100%" }}>📞 Contact Donor</button>
                 </a>
@@ -97,4 +143,4 @@ function NearbyDonors() {
   );
 }
 
-export default NearbyDonors;
+export default NearbyDonors;

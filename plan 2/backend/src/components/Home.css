@@ -1,0 +1,83 @@
+.home-container{
+padding:40px;
+text-align:center;
+color:white;
+}
+
+/* Hero Section */
+.hero-section{
+margin-bottom:50px;
+animation: fadeInDown 1s ease-in-out;
+}
+
+.hero-title{
+font-size:3rem;
+margin-bottom:20px;
+animation: pulseText 2s infinite;
+}
+
+.hero-subtitle{
+font-size:1.3rem;
+color:#ffcccc;
+margin-bottom:30px;
+}
+
+/* Hero Button */
+.hero-btn{
+padding:12px 25px;
+border:none;
+border-radius:25px;
+background:#ff1a1a;
+color:white;
+font-size:1rem;
+cursor:pointer;
+transition:0.3s;
+box-shadow:0 0 10px rgba(255,0,0,0.7);
+}
+
+.hero-btn:hover{
+transform:scale(1.1);
+box-shadow:0 0 25px rgba(255,0,0,1);
+}
+
+/* Feature Cards */
+.feature-cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.glass-card{
+background:rgba(255,255,255,0.1);
+backdrop-filter:blur(10px);
+border-radius:20px;
+padding:25px;
+box-shadow:0 5px 25px rgba(0,0,0,0.3);
+transition:0.3s;
+color:white;
+}
+
+.glass-card:hover{
+transform:translateY(-10px);
+box-shadow:0 10px 30px rgba(255,0,0,0.5);
+}
+
+/* Animations */
+@keyframes fadeInDown{
+0%{opacity:0; transform:translateY(-30px);}
+100%{opacity:1; transform:translateY(0);}
+}
+
+@keyframes pulseText{
+0%,100%{color:#ff1a1a;}
+50%{color:#ff6666;}
+}
+
+.animate-card{
+animation: fadeInUp 1s ease forwards;
+}
+
+@keyframes fadeInUp{
+0%{opacity:0; transform:translateY(30px);}
+100%{opacity:1; transform:translateY(0);}
+}

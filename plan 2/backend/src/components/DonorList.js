@@ -12,15 +12,9 @@ function DonorList() {
   const fetchDonors = async () => {
     try {
       const res = await axios.get("/api/donors");
-      if (Array.isArray(res.data)) {
-        setDonors(res.data);
-      } else {
-        console.error("Expected array but got:", res.data);
-        setDonors([]);
-      }
+      setDonors(res.data);
     } catch (error) {
-      console.error("Fetch error:", error);
-      setDonors([]);
+      console.log(error);
     }
   };
 

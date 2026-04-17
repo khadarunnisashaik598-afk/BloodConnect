@@ -2,19 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function Navbar() {
-  const user = (() => {
-    try {
-      const stored = localStorage.getItem("user");
-      return stored ? JSON.parse(stored) : null;
-    } catch (e) {
-      console.error("Failed to parse user data:", e);
-      return null;
-    }
-  })();
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const logout = () => {
     localStorage.removeItem("user");
-    window.location.href = "/donor-login"; // Changed to donor-login to be more specific
+    window.location.href = "/login";
   };
 
   return (

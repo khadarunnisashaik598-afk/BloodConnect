@@ -13,28 +13,25 @@ import AdminAuth from "./components/AdminAuth";
 import DonorAuth from "./components/DonorAuth";
 import AdminDashboard from "./components/AdminDashboard";
 import UserDashboard from "./components/UserDashboard";
-import ErrorBoundary from "./components/ErrorBoundary";
 
 function App() {
   return (
     <Router>
       <div className="overlay">
         <Navbar />
-        <ErrorBoundary>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/donors" element={<DonorList />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/emergency" element={<Emergency />} />
-            <Route path="/map" element={<DonorMap />} />
-            <Route path="/nearby" element={<NearbyDonors />} />
-            <Route path="/admin-login" element={<AdminAuth />} />
-            <Route path="/donor-login" element={<DonorAuth />} />
-            <Route path="/admin-dashboard" element={<AdminDashboard />} />
-            <Route path="/user-dashboard" element={<UserDashboard />} />
-          </Routes>
-        </ErrorBoundary>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/donors" element={<DonorList />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/emergency" element={<Emergency />} />
+          <Route path="/map" element={<DonorMap />} />
+          <Route path="/nearby" element={<NearbyDonors />} />
+          <Route path="/admin-login" element={<AdminAuth />} />
+          <Route path="/donor-login" element={<DonorAuth />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/user-dashboard" element={<UserDashboard />} />
+        </Routes>
       </div>
     </Router>
   );

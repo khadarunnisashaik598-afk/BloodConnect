@@ -19,8 +19,8 @@ function AdminDashboard() {
 
   useEffect(() => {
     axios.get(`${BASE}/admin-stats`)
-      .then(res => setStats(res.data || { totalDonors: 0, membersTakingBlood: 0, availablePackets: 0 }))
-      .catch(err => console.error("Admin Stats Fetch Error:", err));
+      .then(res => setStats(res.data))
+      .catch(err => console.error(err));
   }, []);
 
   const handleCardClick = async (view) => {
@@ -36,15 +36,10 @@ function AdminDashboard() {
       if (view === "donors") res = await axios.get(`${BASE}/all-donors`);
       else if (view === "requests") res = await axios.get(`${BASE}/all-requests`);
       else if (view === "packets") res = await axios.get(`${BASE}/available-packets`);
-
-      if (res && res.data) {
-        setDetailData(res.data);
-      } else {
-        setDetailData(view === "packets" ? { donors: [], grouped: {} } : []);
-      }
+      setDetailData(res.data);
     } catch (err) {
-      console.error("Admin Detail Fetch Error:", err);
-      setDetailData(view === "packets" ? { donors: [], grouped: {} } : []);
+      console.error(err);
+      setDetailData(null);
     }
     setLoading(false);
   };

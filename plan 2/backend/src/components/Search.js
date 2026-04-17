@@ -15,15 +15,9 @@ function Search() {
       const res = await axios.get("/api/donors/search", {
         params: { bloodGroup, city }
       });
-      if (Array.isArray(res.data)) {
-        setDonors(res.data);
-      } else {
-        console.error("Expected array but got:", res.data);
-        setDonors([]);
-      }
+      setDonors(res.data);
     } catch (error) {
-      console.error("Search error:", error);
-      setDonors([]);
+      console.log(error);
     } finally {
       setSearching(false);
     }

@@ -1,7 +1,11 @@
 require("dotenv").config();
-require("dns").setServers(['8.8.8.8', '8.8.4.4']);
 const express = require("express");
 const mongoose = require("mongoose");
+const dns = require("dns");
+
+// Try to bypass system DNS using Google DNS for Atlas SRV records
+dns.setServers(['8.8.8.8', '8.8.4.4']);
+
 const cors = require("cors");
 const donorRoutes = require("./routes/donorRoutes");
 const authRoutes = require("./routes/authRoutes");
@@ -14,9 +18,20 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI)
-.then(() => console.log("MongoDB connected to Atlas"))
-.catch(err => console.log(err));
+console.log("Connecting to MongoDB...");
+mongoose.connect(process.env.MONGODB_URI, {
+  serverSelectionTimeoutMS: 5000, // Fail fast (5s) instead of 30s
+})
+.then(() => {
+  console.log("✅ SUCCESS: MongoDB connected to Atlas");
+})
+.catch(err => {
+  console.error("❌ DATABASE CONNECTION ERROR:");
+  console.error(err.message);
+  console.log("--- DEBUG INFO ---");
+  console.log("URI provided:", process.env.MONGODB_URI ? "YES (Check credentials)" : "NO (Check .env file)");
+  console.log("TIP: Verify your IP is whitelisted in MongoDB Atlas and the password is correct.");
+});
 // Routes
 app.use("/api/donors", donorRoutes);
 app.use("/api/auth", authRoutes);

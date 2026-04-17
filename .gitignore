@@ -1,5 +1,7 @@
 # Dependencies
 node_modules/
+**/node_modules/
+**/node_modules copy/
 .pnp
 .pnp.js
 
@@ -13,6 +15,8 @@ node_modules/
 # Build folders
 build/
 dist/
+**/build/
+**/dist/
 
 # Debug and Logs
 npm-debug.log*

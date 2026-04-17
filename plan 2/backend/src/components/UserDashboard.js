@@ -2,15 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 function UserDashboard() {
-  const user = (() => {
-    try {
-      const stored = localStorage.getItem("user");
-      return stored ? JSON.parse(stored) : null;
-    } catch (e) {
-      console.error("UserDashboard parse error:", e);
-      return null;
-    }
-  })();
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const [formData, setFormData] = useState({
     name: "",

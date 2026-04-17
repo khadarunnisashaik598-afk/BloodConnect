@@ -58,15 +58,9 @@ function Emergency(){
     if (!blood) { alert("Select blood group first"); return; }
     try {
       const res = await axios.get(`/api/donors/emergency/${encodeURIComponent(blood)}`);
-      if (Array.isArray(res.data)) {
-        setDonors(res.data);
-      } else {
-        console.error("Expected array but got:", res.data);
-        setDonors([]);
-      }
+      setDonors(res.data);
     } catch (err) {
-      console.error("Emergency search error:", err);
-      setDonors([]);
+      console.log(err);
     }
   };
 
