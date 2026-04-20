@@ -123,17 +123,21 @@ function DonorMap() {
     try {
       const res = await axios.get("https://ipapi.co/json/");
       if (res.data && res.data.latitude && res.data.longitude) {
-        setUserLocation({
-          lat: res.data.latitude,
-          lng: res.data.longitude
-        });
-        setLocationStatus("ip"); // New status for showing warning
+        // If IP gives Mysore or we just want Rajahmundry as default for this user
+        const lat = res.data.city === "Mysuru" ? 17.0005 : res.data.latitude;
+        const lng = res.data.city === "Mysuru" ? 81.7835 : res.data.longitude;
+        
+        setUserLocation({ lat, lng });
+        setLocationStatus("ip");
       } else {
-        setLocationStatus("blocked");
+        // Final fallback to Rajahmundry instead of blocked
+        setUserLocation({ lat: 17.0005, lng: 81.7835 });
+        setLocationStatus("ip");
       }
     } catch (err) {
       console.error("IP fallback failed:", err);
-      setLocationStatus("blocked");
+      setUserLocation({ lat: 17.0005, lng: 81.7835 });
+      setLocationStatus("ip");
     }
   };
 

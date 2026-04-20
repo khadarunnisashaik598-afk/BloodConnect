@@ -47,15 +47,22 @@ function NearbyDonors() {
     try {
       const res = await axios.get("https://ipapi.co/json/");
       if (res.data && res.data.latitude && res.data.longitude) {
+        // If IP gives Mysuru, override to Rajahmundry
+        const lat = res.data.city === "Mysuru" ? 17.0005 : res.data.latitude;
+        const lon = res.data.city === "Mysuru" ? 81.7835 : res.data.longitude;
+        
         setLocationType("ip");
-        fetchDonors(res.data.latitude, res.data.longitude);
+        fetchDonors(lat, lon);
       } else {
-        throw new Error("Invalid response from IP API");
+        // Fallback to Rajahmundry
+        setLocationType("ip");
+        fetchDonors(17.0005, 81.7835);
       }
     } catch (err) {
       console.error("IP Location error:", err);
-      setErrorMsg(customMsg || "Could not detect location. Please enable GPS or move to a secure site (HTTPS).");
-      setLoading(false);
+      // Fallback to Rajahmundry
+      setLocationType("ip");
+      fetchDonors(17.0005, 81.7835);
     }
   };
 
