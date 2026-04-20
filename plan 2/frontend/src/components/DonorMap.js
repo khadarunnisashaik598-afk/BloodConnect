@@ -197,8 +197,8 @@ function DonorMap() {
       </div>
 
       <MapContainer
-        center={[17.385044, 78.486671]}
-        zoom={6}
+        center={[17.0005, 81.7835]}
+        zoom={12}
         scrollWheelZoom={true}
         style={{ height: "100%", width: "100%", zIndex: 1 }}
       >
@@ -207,6 +207,35 @@ function DonorMap() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
+
+        <div style={{
+          position: "absolute",
+          bottom: "20px",
+          left: "20px",
+          zIndex: 1000,
+          backgroundColor: "white",
+          padding: "10px",
+          borderRadius: "8px",
+          boxShadow: "0 2px 10px rgba(0,0,0,0.2)"
+        }}>
+          <button 
+            onClick={() => {
+              setUserLocation({ lat: 17.0005, lng: 81.7835 });
+              setLocationStatus("allowed");
+            }}
+            style={{
+              padding: "5px 15px",
+              background: "#b30000",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+              fontWeight: "600"
+            }}
+          >
+            📍 Center to Rajahmundry
+          </button>
+        </div>
 
         {userLocation && (
           <Marker position={[userLocation.lat, userLocation.lng]} icon={icons.user}>
