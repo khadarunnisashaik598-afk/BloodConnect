@@ -17,6 +17,16 @@ function ResizeMap() {
   return null;
 }
 
+function FlyToLocation({ location }) {
+  const map = useMap();
+  useEffect(() => {
+    if (location) {
+      map.flyTo([location.lat, location.lng], 13);
+    }
+  }, [location, map]);
+  return null;
+}
+
 function DonorMap() {
   const [donors, setDonors] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
@@ -203,6 +213,7 @@ function DonorMap() {
         style={{ height: "100%", width: "100%", zIndex: 1 }}
       >
         <ResizeMap />
+        <FlyToLocation location={userLocation} />
         <TileLayer 
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

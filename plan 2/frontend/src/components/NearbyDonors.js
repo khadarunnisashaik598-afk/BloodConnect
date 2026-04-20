@@ -15,7 +15,6 @@ function NearbyDonors() {
     setLoading(true);
     setErrorMsg("");
 
-    // Check for insecure origin and if not localhost
     const isInsecure = window.location.protocol === "http:" && 
                      window.location.hostname !== "localhost" && 
                      window.location.hostname !== "127.0.0.1";
@@ -113,7 +112,19 @@ function NearbyDonors() {
         <div className="glass-container" style={{ textAlign: "center", color: "#ff4d4d", padding: "40px" }}>
           <h3>⚠️ Location Access Issue</h3>
           <p>{errorMsg}</p>
-          <button onClick={getLocation} className="glass-btn" style={{ marginTop: "20px" }}>🔄 Retry Detection</button>
+          <div style={{ display: "flex", gap: "10px", justifyContent: "center", marginTop: "20px" }}>
+            <button onClick={getLocation} className="glass-btn">🔄 Retry Detection</button>
+            <button 
+              onClick={() => {
+                setLocationType("browser");
+                fetchDonors(17.0005, 81.7835);
+              }} 
+              className="glass-btn" 
+              style={{ background: "#b30000" }}
+            >
+              📍 Use Rajahmundry
+            </button>
+          </div>
         </div>
       ) : (
         <div className="donor-grid">
